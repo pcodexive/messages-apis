@@ -23,7 +23,7 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-
+io.set("origins", "*:*");
 io.on('connection', socket => {
     let previousId;
     const safeJoin = currentId => {
