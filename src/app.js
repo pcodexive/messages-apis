@@ -1,16 +1,10 @@
 const app = require("express")();
+const http = require("http").createServer(app);
+
 var cors = require("cors");
-const http = require("http");
-const server = http.createServer(app);
-const io = require("socket.io")(server, {
-    handlePreflightRequest: (req, res) => {
-        const headers = {
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
-            "Access-Control-Allow-Credentials": true,
-        };
-        res.writeHead(200, headers);
-        res.end();
+const io = require("socket.io")(http, {
+    cors: {
+        origins: ["https://message-angular.herokuapp.com"],
     },
 });
 
@@ -39,7 +33,6 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-
 io.on("connection", (socket) => {
     let previousId;
     const safeJoin = (currentId) => {
@@ -72,6 +65,6 @@ io.on("connection", (socket) => {
     console.log(`Socket ${socket.id} has connected`);
 });
 
-server.listen(4444, () => {
+http.listen(4444, () => {
     console.log("Listening on port 4444");
 });
