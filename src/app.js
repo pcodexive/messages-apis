@@ -23,7 +23,8 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-io.set("origins", "*:*");
+io.origins(["http://localhost:4444"]); // for local development
+io.origins(["https://message-angular.herokuapp.com"]);
 io.on('connection', socket => {
     let previousId;
     const safeJoin = currentId => {
